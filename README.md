@@ -3,7 +3,7 @@
 A full-featured **Ecommerce platform** built with the **MERN stack (MongoDB, Express, React, Node.js)**.  
 Includes authentication, product management, shopping cart, orders, payment integration, and mailing service.  
 
-🔗 **[Live Demo](https://duka.com)**  
+🔗 **[Live Demo](https://duka12.com)**  
 
 ---
 
@@ -47,7 +47,6 @@ Includes authentication, product management, shopping cart, orders, payment inte
 
 ## 📂 Project Structure  
 
-```bash
 ecommerce-app/
 ├── api
 │   ├── config/
@@ -87,8 +86,11 @@ ecommerce-app/
 │
 └── README.md
 
-⚙️ Installation & Setup
+---
 
+## ⚙️ Installation & Setup
+
+```bash
 # 1️. Clone the Repo  
 git clone https://github.com/EnockYator/duka-ecommerce-app.git
 cd duka-ecommerce-app
@@ -132,14 +134,21 @@ App will be available at:
 
 Home page
 Products page
-📡 API Endpoints
+```
+---
+
+## 📡 API Endpoints
+
 Method	Endpoint	Description
 POST	/api/auth/register	Register new user
 POST	/api/auth/login	Login user & get token
 GET	/api/products	Get all products
 POST	/api/products	Add new product (Admin)
 GET	/api/orders/:id	Get order by ID
-🚀 Deployment
+
+---
+
+## 🚀 Deployment
 
     Frontend: Netlify
 
@@ -147,7 +156,9 @@ GET	/api/orders/:id	Get order by ID
 
     Database: MongoDB Atlas
 
-👨‍💻 Author
+---
+
+## 👨‍💻 Author
 
 Enock Yator
-🔗 GitHub
+🔗 [GitHub](https://github.com/EnockYator)
