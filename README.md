@@ -142,14 +142,14 @@ App will be available at:
 ---
 
 ## 📡 API Endpoints
-
+```bash
 Method	Endpoint	Description
 POST	/api/auth/register	Register new user
 POST	/api/auth/login	Login user & get token
 GET	/api/products	Get all products
 POST	/api/products	Add new product (Admin)
 GET	/api/orders/:id	Get order by ID
-
+```
 ---
 
 ## 🚀 Deployment
