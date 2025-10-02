@@ -46,7 +46,7 @@ Includes authentication, product management, shopping cart, orders, payment inte
 ---
 
 ## 📂 Project Structure  
-
+```bash
 ecommerce-app/
 ├── api
 │   ├── config/
@@ -85,7 +85,7 @@ ecommerce-app/
 │   └── vite.config.js
 │
 └── README.md
-
+```
 ---
 
 ## ⚙️ Installation & Setup
@@ -130,11 +130,14 @@ App will be available at:
     🌍 Frontend → http://localhost:5173
 
 🔗 Backend API → http://localhost:5000/api
-📸 Snapshots
-
-Home page
-Products page
 ```
+---
+
+## 📸 Snapshots
+
+![Home page][home.png]
+![Products][listing.png]
+
 ---
 
 ## 📡 API Endpoints
