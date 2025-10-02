@@ -124,13 +124,14 @@ npm run dev
 # Run frontend
 cd client
 npm start  
+```
 
 App will be available at:
 
     🌍 Frontend → http://localhost:5173
 
 🔗 Backend API → http://localhost:5000/api
-```
+
 ---
 
 ## 📸 Snapshots
