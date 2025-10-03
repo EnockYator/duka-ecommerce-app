@@ -29,6 +29,10 @@ import About from "./pages/guest-view/about"
 // custom hooks
 import { useAuth } from "./custom_hooks/useAuth"
 
+//shadcn
+import { Toaster } from "sonner"
+import { AuthNotifier } from "./contexts/auth/authNotifier"
+
 
 
 function App() {
@@ -36,6 +40,15 @@ function App() {
 
   return (
     <div className="flex min-h-screen w-screen flex-col overflow-hidden bg-white">
+
+      {/* sonner from shadcn*/}
+      <AuthNotifier />
+      <Toaster 
+        position="top-right" 
+        richColors // stronger color scheme
+        closeButton // enable close button
+      />
+
       { /* Common components */ }
 
       <Routes>
