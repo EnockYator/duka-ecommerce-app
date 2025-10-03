@@ -141,7 +141,7 @@ App will be available at:
 
 ![Home page](home.png)
 
-![Products](listing.png)
+![Login page](./client/public/auth-login.png)
 
 ---
 

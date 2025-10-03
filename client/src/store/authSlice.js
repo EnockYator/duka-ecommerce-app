@@ -52,7 +52,8 @@ export const logoutUser = createAsyncThunk(
             const res = await axiosInstance.post(
                 "http://localhost:5000/api/auth/logout"
             );
-            return res.data;
+            localStorage.removeItem('accessToken'); // Clear token
+            return res.data.message;
         } catch (err) {
             return rejectWithValue(err.response?.data || { message: "Logout failed" });
         }
@@ -83,13 +84,13 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            state.user = action.payload
+            state.user = action.payload.user || null
+            state.isAuthenticated = !!state.user;
         },
         setCredentials: (state, action) => {
-            const { user, accessToken } = action.payload;
-            state.user = user;
-            state.accessToken = accessToken;
-            state.isAuthenticated = !!user;
+            state.user = action.payload.user || null;
+            state.accessToken = action.payload.accessToken || null;
+            state.isAuthenticated = !!state.user;
             state.isLoading = false;
             state.error = null;
         },
@@ -97,12 +98,11 @@ const authSlice = createSlice({
             state.user = null;
             state.accessToken = null;
             state.isLoading = false;
-            state.error = null;
             state.isAuthenticated = false;
             state.error = null;
         },
         setAuthError: (state, action) => {
-            state.error = action.payload;
+            state.error = action.payload.error;
             state.isLoading = false;
         }
     },
@@ -112,16 +112,12 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(registerUser.fulfilled, (state, action) => {
+            .addCase(registerUser.fulfilled, (state) => {
                 state.isLoading = false;
-                state.user = action.payload;
-                state.isAuthenticated = false;
                 state.error = null;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
-                state.user = null;
-                state.isAuthenticated = false;
                 state.error = 
                     action.payload?.errors?.email ||
                     action.payload?.errors?.userName ||
@@ -174,24 +170,25 @@ const authSlice = createSlice({
             })
             // Refresh start
             .addCase(attemptRefresh.pending, (state) => {
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
             })
             // Refresh success
             .addCase(attemptRefresh.fulfilled, (state, action) => {
                 const { user, accessToken } = action.payload;
-                state.user = user;
-                state.accessToken = accessToken;
-                state.isAuthenticated = true;
-                state.loading = false;
+                state.user = user || null;
+                state.accessToken = accessToken || null;
+                state.isAuthenticated = !!user;
+                state.isLoading = false;
             })
             // Refresh failed
             .addCase(attemptRefresh.rejected, (state, action) => {
-                state.error = action.payload?.message || "Token refresh failed";
                 state.isAuthenticated = false;
                 state.accessToken = null;
                 state.user = null;
-                state.loading = false;
+                state.isLoading = false;
+                state.error = action.payload?.message || 
+                    "Token refresh failed";
             });
 
     },
