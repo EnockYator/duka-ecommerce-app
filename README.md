@@ -139,8 +139,9 @@ App will be available at:
 
 ## 📸 Snapshots
 
-![Home page](home.png)
-![Products](listing.png)
+    ![Home page](home.png)
+
+    ![Products](listing.png)
 
 ---
 
