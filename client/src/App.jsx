@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import AuthLayout from "./components/auth/AuthLayout"
 import AuthLogin from "./pages/auth/login"
 import AuthRegister from "./pages/auth/register"
+import RefreshPage from "./pages/auth/refresh"
 // admin
 import AdminLayout from "./components/admin-view/AdminLayout"
 import AdminDashBoard from "./pages/admin-view/dashboard"
@@ -26,6 +27,7 @@ import GuestLayout from "./components/guest-view/GuestLayout"
 import About from "./pages/guest-view/about"
 
 
+
 function App() {
 
   const isAuthenticated = false;
@@ -45,6 +47,8 @@ function App() {
           <Route index element={<Navigate to="login" replace />} /> {/* default to login */ /* SEO friendly by avoiding duplicates */}
           <Route path="login" element={<AuthLogin/>}></Route>
           <Route path="register" element={<AuthRegister/>}></Route>
+          <Route path="refresh" element={<RefreshPage/>}></Route>
+
         </Route>
         
         {/* admin routes */}
