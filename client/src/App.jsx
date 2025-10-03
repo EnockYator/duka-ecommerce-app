@@ -26,12 +26,13 @@ import GuestHomePage from "./pages/guest-view/home"
 import GuestLayout from "./components/guest-view/GuestLayout"
 import About from "./pages/guest-view/about"
 
+// custom hooks
+import { useAuth } from "./custom_hooks/useAuth"
+
 
 
 function App() {
-
-  const isAuthenticated = false;
-  const user = null;
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <div className="flex min-h-screen w-screen flex-col overflow-hidden bg-white">
