@@ -1,0 +1,201 @@
+"use strict"
+
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import axiosInstance from '../../axios';
+
+
+const initialState = {
+    isAuthenticated: false,
+    isLoading: false,
+    user: null,
+    accessToken: null,
+    error: null,
+};
+
+export const registerUser = createAsyncThunk(
+    "/auth/register",
+    
+    async (formData, { rejectWithValue }) => {
+        try {
+            const res = await axiosInstance.post(
+                "http://localhost:5000/api/auth/register",
+                formData
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || { message: "Registration failed" });
+        }
+    }
+);
+
+export const loginUser = createAsyncThunk(
+    "/auth/login",
+    
+    async (formData, { rejectWithValue }) => {
+        try {
+            const res = await axiosInstance.post(
+                "http://localhost:5000/api/auth/login",
+                formData
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || { message: "Login failed" });
+        }
+    }
+);
+
+export const logoutUser = createAsyncThunk(
+    "/auth/logout",
+    
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axiosInstance.post(
+                "http://localhost:5000/api/auth/logout"
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || { message: "Logout failed" });
+        }
+    }
+);
+
+export const attemptRefresh = createAsyncThunk(
+  "auth/refresh",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post(
+        "http://localhost:5000/api/auth/refresh",
+        {},
+        { withCredentials: true } // allows cookies for refresh token
+      );
+
+      // Return the new tokens/user from backend
+      return res.data; // expected: { user, accessToken }
+    } catch (err) {
+      return rejectWithValue(err.response?.data || { message: "Refresh failed" });
+    }
+  }
+);
+
+
+const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        setUser: (state, action) => {
+            state.user = action.payload
+        },
+        setCredentials: (state, action) => {
+            const { user, accessToken } = action.payload;
+            state.user = user;
+            state.accessToken = accessToken;
+            state.isAuthenticated = !!user;
+            state.isLoading = false;
+            state.error = null;
+        },
+        clearCredentials: (state) => {
+            state.user = null;
+            state.accessToken = null;
+            state.isLoading = false;
+            state.error = null;
+            state.isAuthenticated = false;
+            state.error = null;
+        },
+        setAuthError: (state, action) => {
+            state.error = action.payload;
+            state.isLoading = false;
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(registerUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+                state.isAuthenticated = false;
+                state.error = null;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+                state.error = 
+                    action.payload?.errors?.email ||
+                    action.payload?.errors?.userName ||
+                    action.payload?.errors?.password ||
+                    action.payload?.general ||
+                    action.payload?.message ||
+                    "Registration failed";
+            })
+
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                const { user, accessToken } = action.payload;
+                state.isLoading = false;
+                state.user = user || null;
+                state.accessToken = accessToken || null;
+                state.error = null;
+                state.isAuthenticated = !!user;
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+                state.error = 
+                    action.payload?.errors?.email ||
+                    action.payload?.errors?.userName ||
+                    action.payload?.errors?.password ||
+                    action.payload?.general ||
+                    action.payload?.message ||
+                    "Login failed";
+            })
+            .addCase(logoutUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.isLoading = false;
+                state.user = null;
+                state.accessToken = null;
+                state.isAuthenticated = false;
+                state.error = null;
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = 
+                    action.payload?.message || 
+                    "Logout failed";
+            })
+            // Refresh start
+            .addCase(attemptRefresh.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            // Refresh success
+            .addCase(attemptRefresh.fulfilled, (state, action) => {
+                const { user, accessToken } = action.payload;
+                state.user = user;
+                state.accessToken = accessToken;
+                state.isAuthenticated = true;
+                state.loading = false;
+            })
+            // Refresh failed
+            .addCase(attemptRefresh.rejected, (state, action) => {
+                state.error = action.payload?.message || "Token refresh failed";
+                state.isAuthenticated = false;
+                state.accessToken = null;
+                state.user = null;
+                state.loading = false;
+            });
+
+    },
+});
+
+export const {setUser, setCredentials, clearCredentials, setAuthError} = authSlice.actions;
+export default authSlice.reducer;
