@@ -90,20 +90,27 @@ const authSlice = createSlice({
         setCredentials: (state, action) => {
             state.user = action.payload.user || null;
             state.accessToken = action.payload.accessToken || null;
+            state.message = action.payload.message || null;
             state.isAuthenticated = !!state.user;
             state.isLoading = false;
             state.error = null;
         },
-        clearCredentials: (state) => {
+        clearCredentials: (state, action) => {
             state.user = null;
             state.accessToken = null;
             state.isLoading = false;
             state.isAuthenticated = false;
             state.error = null;
+            state.message = action.payload.message || null;
         },
         setAuthError: (state, action) => {
             state.error = action.payload.error;
             state.isLoading = false;
+        },
+        // for sonner toast notifications
+        clearMessages: (state) => {
+            state.message = null;
+            state.error = null;
         }
     },
     extraReducers: (builder) => {
@@ -112,9 +119,10 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(registerUser.fulfilled, (state) => {
+            .addCase(registerUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
+                state.message = action.payload.message || null;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -138,6 +146,7 @@ const authSlice = createSlice({
                 state.accessToken = accessToken || null;
                 state.error = null;
                 state.isAuthenticated = !!user;
+                state.message = action.payload.message || null;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -155,12 +164,13 @@ const authSlice = createSlice({
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(logoutUser.fulfilled, (state) => {
+            .addCase(logoutUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.user = null;
                 state.accessToken = null;
                 state.isAuthenticated = false;
                 state.error = null;
+                state.message = action.payload.message || null;
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -180,6 +190,7 @@ const authSlice = createSlice({
                 state.accessToken = accessToken || null;
                 state.isAuthenticated = !!user;
                 state.isLoading = false;
+                state.message = action.payload.message || null;
             })
             // Refresh failed
             .addCase(attemptRefresh.rejected, (state, action) => {
@@ -194,5 +205,5 @@ const authSlice = createSlice({
     },
 });
 
-export const {setUser, setCredentials, clearCredentials, setAuthError} = authSlice.actions;
+export const {setUser, setCredentials, clearCredentials, setAuthError, clearMessages} = authSlice.actions;
 export default authSlice.reducer;
