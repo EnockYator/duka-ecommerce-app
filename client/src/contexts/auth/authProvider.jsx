@@ -3,7 +3,7 @@
 import { 
     attemptRefresh, clearCredentials, loginUser,
     logoutUser, registerUser, setAuthError, 
-    setCredentials, setUser
+    setCredentials, setUser, clearMessages
     } from '@/store/authSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +35,7 @@ export function  AuthProvider({ children }) {
         setCredentials: () => dispatch(setCredentials()),
         clearCredentials: () => dispatch(clearCredentials()),
         setAuthError: () => dispatch(setAuthError()),
+        clearMessages: () => dispatch(clearMessages()),
     };
     
     // prevent premature loading
