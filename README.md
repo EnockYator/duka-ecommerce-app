@@ -144,6 +144,9 @@ App will be available at:
 
 ## 📡 API Endpoints
 
+The following are some of the api endpoints.
+**NOTE**: The app contains so many endpoints, each with a specific funtion.
+
 |Method	| Endpoint           | Description                 |
 |:------|:------------------:|:----------------------------|
 |POST	| /api/auth/register | Register new user           | 
