@@ -145,7 +145,7 @@ App will be available at:
 ## 📡 API Endpoints
 
 |Method	| Endpoint           | Description                 |
-|:------|:------------------:|----------------------------:|
+|:------|:------------------:|:----------------------------|
 |POST	| /api/auth/register | Register new user           | 
 |POST	| /api/auth/login	 | Login user & get token      |
 |GET	| /api/products	     | Get all products            |
