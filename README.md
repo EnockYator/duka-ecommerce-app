@@ -139,7 +139,11 @@ App will be available at:
 
 ## 📸 Snapshots
 
+Home Page
+
 ![Home page](home.png)
+
+Login Page
 
 ![Login page](./client/public/auth-login.png)
 
