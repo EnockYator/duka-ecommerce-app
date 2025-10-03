@@ -3,5 +3,14 @@
         "Enock",
         "Yator"
     ],
-    "docwriter.style": "JSDoc"
+    "docwriter.style": "JSDoc",
+    //exclude large folders from being indexed
+    "files.watcherExclude": {
+        "**/node_modules":true,
+        "**/dist":true,
+        "**/.git":true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/.hg/store/**": true
+    }
 }
