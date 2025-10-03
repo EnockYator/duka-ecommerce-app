@@ -4,7 +4,7 @@
 A full-featured **Ecommerce platform** built with the **MERN stack (MongoDB, Express, React, Node.js)**.  
 Includes authentication, product management, shopping cart, orders, payment integration, and mailing service.  
 
-🔗 **[Live Demo](https://duka12.com)**  
+🔗 **[Live Demo - Only Frontend](https://duka-ecommerce-app.vercel.app/)**  
 
 **NOTE**: This application is still on active development and testing stages, it will be live soon, stay updated.
 
