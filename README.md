@@ -1,5 +1,5 @@
 
-# 🛒 Duka - MERN Stack Ecommerce App  
+# 🛒 Duka - Monolithic MERN Stack Ecommerce App  
 
 A full-featured **Ecommerce platform** built with the **MERN stack (MongoDB, Express, React, Node.js)**.  
 Includes authentication, product management, shopping cart, orders, payment integration, and mailing service.  
