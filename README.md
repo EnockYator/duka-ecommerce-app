@@ -6,6 +6,8 @@ Includes authentication, product management, shopping cart, orders, payment inte
 
 🔗 **[Live Demo](https://duka12.com)**  
 
+**NOTE**: This application is still on active development and testing stages, it will be live soon, stay updated.
+
 ---
 
 ## ✨ Features  
