@@ -71,6 +71,7 @@ async (error) => {
             // call refresh endpoint (cookie wil be sent)
             // global axios is used here to avoid interceptors on axiosInstance causing recursion
             const res = await axios.post(
+                import.meta.env.VITE_API_BASE_URL + "/api/auth/refresh" || 
                 "http://localhost:5000/api/auth/refresh",
                 {},
                 { withCredentials: true }
