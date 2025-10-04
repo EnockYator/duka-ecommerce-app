@@ -167,9 +167,9 @@ The following are some of the api endpoints.
 
 ## 🚀 Deployment
 
-    Frontend: Netlify
+    Frontend: Deployed on Vercel
 
-    Backend: AWS
+    Backend: Deployed on Render
 
     Database: MongoDB Atlas
 
