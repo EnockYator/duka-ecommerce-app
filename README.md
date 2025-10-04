@@ -52,42 +52,80 @@ Includes authentication, product management, shopping cart, orders, payment inte
 ```bash
 ecommerce-app/
 ├── api
-│   ├── config/
+│   ├── config
 │   │   └── db.js
-│   ├── controllers/
-│   │   └── auth/
-│   │       └── auth-controller.js
-│   ├── models/
+│   ├── models
 │   │   └── User.js
-│   ├── routes/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── routes
 │   │   └── auth-route.js
-│   ├── schemas/
+│   ├── schemas
 │   │   └── UserSchema.js
-│   ├── services/
-│   │   ├── authService.js
-│   │   └── tokenService.js
 │   ├── server.js
-│   ├── package.json
-│   └── package-lock.json
-│
+│   ├── services
+│   │   ├── auth-service.js
+│   │   └── token-service.js
+│   └── utils
+│       └── auth-validators
+│           ├── loginValidator.js
+│           └── registerValidator.js
 ├── client
-│   ├── public/
-│   │   └── vite.svg
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   ├── config/
-│   │   ├── lib/
-│   │   ├── pages/
-│   │   └── store/
-│   ├── App.jsx
+│   ├── axios.js
+│   ├── components.json
+│   ├── eslint.config.js
 │   ├── index.html
-│   ├── main.jsx
+│   ├── jsconfig.app.json
+│   ├── jsconfig.json
 │   ├── package.json
+│   ├── package-lock.json
+│   ├── public
+│   │   ├── auth-login.png
+│   │   └── vite.svg
+│   ├── README.md
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   │   ├── images
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── admin-view
+│   │   │   ├── auth
+│   │   │   ├── common
+│   │   │   ├── guest-view
+│   │   │   ├── shopping-view
+│   │   │   └── ui
+│   │   ├── config
+│   │   │   └── index.js
+│   │   ├── contexts
+│   │   │   ├── auth
+│   │   │   └── products
+│   │   ├── custom_hooks
+│   │   │   └── useAuth.jsx
+│   │   ├── index.css
+│   │   ├── lib
+│   │   │   └── utils.js
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── admin-view
+│   │   │   ├── auth
+│   │   │   ├── guest-view
+│   │   │   ├── not-found
+│   │   │   └── shopping-view
+│   │   └── store
+│   │       ├── authSlice.js
+│   │       └── store.js
 │   ├── tailwind.config.js
 │   └── vite.config.js
-│
 └── README.md
+```
+
+**NOTE:** Plese note that the above tree directory structure is truncated at level 4 deep and ignores gitignored files
+
+Generated from runing the following command on bash terminal
+```bash
+tree --gitignore -L 4
 ```
 ---
 
