@@ -8,7 +8,7 @@ function GuestHomePage() {
         <div>
             <p>Guest Home Page</p>
             <Button>
-                <Link to="/login">Go to login page</Link>
+                <Link to="/auth/login">Go to login page</Link>
             </Button>
         </div>
         
