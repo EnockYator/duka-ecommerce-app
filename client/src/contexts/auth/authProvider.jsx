@@ -32,7 +32,7 @@ export function  AuthProvider({ children }) {
         logoutUser: () => dispatch(logoutUser()),
         attemptRefresh: () => dispatch(attemptRefresh()),
         setUser: () => dispatch(setUser()),
-        setCredentials: () => dispatch(setCredentials()),
+        setCredentials: (data) => dispatch(setCredentials(data)),
         clearCredentials: () => dispatch(clearCredentials()),
         setAuthError: () => dispatch(setAuthError()),
         clearMessages: () => dispatch(clearMessages()),
