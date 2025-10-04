@@ -18,6 +18,7 @@ export const registerUser = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const res = await axiosInstance.post(
+                import.meta.env.VITE_API_BASE_URL + "/api/auth/register" || 
                 "http://localhost:5000/api/auth/register",
                 formData
             );
@@ -34,6 +35,7 @@ export const loginUser = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const res = await axiosInstance.post(
+                import.meta.env.VITE_API_BASE_URL + "/api/auth/login" || 
                 "http://localhost:5000/api/auth/login",
                 formData
             );
@@ -50,6 +52,7 @@ export const logoutUser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const res = await axiosInstance.post(
+                import.meta.env.VITE_API_BASE_URL + "/api/auth/logout" || 
                 "http://localhost:5000/api/auth/logout"
             );
             localStorage.removeItem('accessToken'); // Clear token
@@ -65,6 +68,7 @@ export const attemptRefresh = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.post(
+        import.meta.env.VITE_API_BASE_URL + "/api/auth/refresh" || 
         "http://localhost:5000/api/auth/refresh",
         {},
         { withCredentials: true } // allows cookies for refresh token
