@@ -23,7 +23,7 @@ const app = express();
 
 // Middleware (comes fast before routes)
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://duka-ecommerce-app.vercel.app' || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // for login
     allowedHeaders: [
