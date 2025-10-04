@@ -1,7 +1,7 @@
 "use strict"
 
 const express = require('express');
-const { registerUser, loginUser, refreshAccessToken, logoutUser } = require('../controllers/auth/auth-conroller');
+const { registerUser, loginUser, refreshAccessToken, logoutUser } = require('../services/auth-service');
 
 // create router interface
 const router = express.Router();
