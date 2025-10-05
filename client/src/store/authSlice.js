@@ -99,13 +99,12 @@ const authSlice = createSlice({
             state.isLoading = false;
             state.error = null;
         },
-        clearCredentials: (state, action) => {
+        clearCredentials: (state) => {
             state.user = null;
             state.accessToken = null;
             state.isLoading = false;
             state.isAuthenticated = false;
             state.error = null;
-            state.message = action.payload.message || null;
         },
         setAuthError: (state, action) => {
             state.error = action.payload.error;

@@ -9,8 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { AuthContext } from './authContext';
 
-
-
 // provider to wrap on app
 export function  AuthProvider({ children }) {
     const dispatch = useDispatch();
@@ -28,7 +26,7 @@ export function  AuthProvider({ children }) {
                 await dispatch(refreshSession()).unwrap(); // using uwrap allow catching errors easily
             } catch (err) {
                 dispatch(clearCredentials());
-                throw new error(`Session refresh failed ${err}`);
+                throw new Error(`Session refresh failed ${err}`);
             }
         };
         refresh();
@@ -36,7 +34,9 @@ export function  AuthProvider({ children }) {
 
     // show loading screen while refreshing
     if (isLoading && !user) {
-        return <div>Loading session...</div>;
+        return (
+            <div className='w-screen h-screen bg-gray-50 px-4 py-4'>Loading session...</div>
+        );
     }
 
     // define auth reusable auth actions
