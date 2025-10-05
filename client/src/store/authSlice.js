@@ -63,7 +63,7 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
-export const attemptRefresh = createAsyncThunk(
+export const refreshSession = createAsyncThunk(
   "auth/refresh",
   async (_, { rejectWithValue }) => {
     try {
@@ -75,9 +75,9 @@ export const attemptRefresh = createAsyncThunk(
       );
 
       // Return the new tokens/user from backend
-      return res.data; // expected: { user, accessToken }
+      return res.data; // expected: { message, user, accessToken }
     } catch (err) {
-      return rejectWithValue(err.response?.data || { message: "Refresh failed" });
+      return rejectWithValue(err.response?.data || { message: "Session refresh failed" });
     }
   }
 );
@@ -182,28 +182,24 @@ const authSlice = createSlice({
                     action.payload?.message || 
                     "Logout failed";
             })
-            // Refresh start
-            .addCase(attemptRefresh.pending, (state) => {
+            // session refresh
+            .addCase(refreshSession.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
             })
             // Refresh success
-            .addCase(attemptRefresh.fulfilled, (state, action) => {
-                const { user, accessToken } = action.payload;
-                state.user = user || null;
-                state.accessToken = accessToken || null;
-                state.isAuthenticated = !!user;
-                state.isLoading = false;
-                state.message = action.payload.message || null;
+            .addCase(refreshSession.fulfilled, (state, action) => {
+                // reuse setCredentials logic
+                authSlice.caseReducers.setCredentials(state, action);
             })
             // Refresh failed
-            .addCase(attemptRefresh.rejected, (state, action) => {
+            .addCase(refreshSession.rejected, (state, action) => {
                 state.isAuthenticated = false;
                 state.accessToken = null;
                 state.user = null;
                 state.isLoading = false;
                 state.error = action.payload?.message || 
-                    "Token refresh failed";
+                    "Session refresh failed";
             });
 
     },
