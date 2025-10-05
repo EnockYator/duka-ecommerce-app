@@ -10,6 +10,6 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/refresh", refreshAccessToken); // uses cookie
-router.post("logout", logoutUser);
+router.post("/logout", logoutUser);
 
 module.exports = router;
