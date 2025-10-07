@@ -174,7 +174,7 @@ const refreshAccessToken = async (req, res) => {
         // verify refresh token
         const { valid, expired, decoded } = verifyRefreshToken(token);
         
-        if (!valid || expired) {
+        if (!valid) {
             return res.status(401).json({
                 success: false,
                 message: expired ? "Session expired, please login" : "Invalid refresh token"
