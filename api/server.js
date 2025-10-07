@@ -20,10 +20,13 @@ connectDB(MONGODB_URL);
 
 const app = express();
 
-
+const allowedOrigins = [
+    'https://duka-ecommerce-app.vercel.app',
+    'http://localhost:5173'
+];
 // Middleware (comes fast before routes)
 app.use(cors({
-    origin: 'https://duka-ecommerce-app.vercel.app' || 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // for login
     allowedHeaders: [
