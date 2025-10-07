@@ -14,9 +14,7 @@ const axiosInstance = axios.create({
 // placeholder for injecting store later to avoid circular dependency
 let store;
 
-export const injectstore = (_store) => {
-    store = _store;
-};
+export const injectStore = (_store) => { store = _store };
 
 // attach acces token from redux
 axiosInstance.interceptors.request.use((config) => {
