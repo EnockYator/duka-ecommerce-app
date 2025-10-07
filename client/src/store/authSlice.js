@@ -75,7 +75,7 @@ export const refreshSession = createAsyncThunk(
       );
 
       // Return the new tokens/user from backend
-      return res.data; // expected: { message, user, accessToken }
+       return res.data; // expected: { message, user, accessToken }
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: "Session refresh failed" });
     }

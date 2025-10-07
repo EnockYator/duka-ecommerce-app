@@ -21,15 +21,26 @@ export function  AuthProvider({ children }) {
 
     // run refreshSession when app mounts (on reload or on first visit)
     useEffect(() => {
-        const refresh = async () => {
+        const refreshOnMount = async () => {
             try {
-                await dispatch(refreshSession()).unwrap(); // using uwrap allow catching errors easily
+                const res = await dispatch(refreshSession()).unwrap(); // using uwrap allow catching errors easily
+                if (res?.message?.includes("guest mode")) {
+                    dispatch(clearCredentials());
+                }
             } catch (err) {
+                // Ignore “token not provided” or “guest mode” errors
                 dispatch(clearCredentials());
-                throw new Error(`Session refresh failed ${err}`);
             }
         };
-        refresh();
+        refreshOnMount();
+        
+        // also refresh after every 15 minutes (900,000 ms)
+        const interval = setInterval(() => {
+            refreshOnMount();
+        }, 15 * 60 * 1000); // 15 minutes
+
+        return () => clearInterval(interval); // cleanup up interval on unmount
+
     }, [dispatch]);
 
     // show loading screen while refreshing
