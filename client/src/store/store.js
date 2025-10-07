@@ -2,7 +2,7 @@
 
 import authReducer from './authSlice'
 import { configureStore } from '@reduxjs/toolkit';
-import { injectstore } from './../../axios';
+import { injectStore } from './../../axios';
 
 const store = configureStore({
     reducer: {
@@ -11,6 +11,6 @@ const store = configureStore({
 });
 
 // inject the store into axios after creation to avoid circular dependency
-injectstore(store);
+injectStore(store);
 
 export default store;
