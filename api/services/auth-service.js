@@ -166,19 +166,18 @@ const refreshAccessToken = async (req, res) => {
         const token = req.cookies?.refreshToken;
         
         if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: "No refresh token provided"
+            return res.status(200).json({
+                message: "No refresh token found, guest mode"
             });
         }
         
         // verify refresh token
         const { valid, expired, decoded } = verifyRefreshToken(token);
         
-        if (!valid) {
+        if (!valid || expired) {
             return res.status(401).json({
                 success: false,
-                message: expired ? "Refresh token expired" : "Invalid refresh token"
+                message: expired ? "Session expired, please login" : "Invalid refresh token"
             });
         }
        
@@ -245,10 +244,11 @@ const refreshAccessToken = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             success: false,
-            message: err.message || "Failed to process refresh token"
+            message: err.message || "Session refresh failed"
         });
     }
 };
+
 
 /********* logout service *********/
 const logoutUser = async (req, res) => {
