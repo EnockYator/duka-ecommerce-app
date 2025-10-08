@@ -37,6 +37,7 @@ export const loginUser = createAsyncThunk(
                 `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
                 formData
             );
+            localStorage.removeItem('logout'); // clear logout if there
             localStorage.setItem('accessToken', res.data.accessToken); // store token
             localStorage.setItem('login', Date.now()); // for cross-tab login detection
             return res.data;
@@ -53,6 +54,7 @@ export const logoutUser = createAsyncThunk(
         try {
             const res = await axiosInstance.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`);
             localStorage.removeItem('accessToken'); // Clear token
+            localStorage.removeItem('login'); // clear login
             localStorage.setItem('logout', Date.now()); // for cross-tab logout detection
             return res.data.message;
         } catch (err) {
