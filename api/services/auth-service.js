@@ -161,7 +161,7 @@ const loginUser = async (req, res) => {
 };
 
 /********* refreshToken service *********/
-const refreshAccessToken = async (req, res) => {
+const refreshRefreshToken = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
         
@@ -343,5 +343,5 @@ module.exports = {
     loginUser,
     logoutUser,
     logoutAllDevices,
-    refreshAccessToken
+    refreshRefreshToken
 };
