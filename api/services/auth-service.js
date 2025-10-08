@@ -165,8 +165,11 @@ const refreshRefreshToken = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
         
+        // No token - guest mode (silently ignore)
         if (!token) {
             return res.status(200).json({
+                success: false,
+                mode: "guest",
                 message: "No refresh token found, guest mode"
             });
         }
@@ -174,9 +177,19 @@ const refreshRefreshToken = async (req, res) => {
         // verify refresh token
         const { valid, expired, decoded } = verifyRefreshToken(token);
         
+        // if invalid or expired - clear cookie + guest mode (no 401)
         if (!valid) {
-            return res.status(401).json({
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+                path: "/",
+                sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+             
+            return res.status(200).json({
                 success: false,
+                mode: "guest",
                 message: expired ? "Session expired, please login" : "Invalid refresh token"
             });
         }
@@ -184,13 +197,23 @@ const refreshRefreshToken = async (req, res) => {
         // find user and ensure token exists in DB
         const user = await User.findById(decoded.id);
         if (!user || !user.refreshTokens || !user.refreshTokens.some(t => t.token === token)) {
-            return res.status(401).json({
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+                path: "/",
+                sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+
+
+            return res.status(200).json({
                 success: false,
-                message: "Refresh token not recognized"
+                mode: "guest",
+                message: "Refresh token not recognized, guest mode"
             });
         }
 
-        // find the device entry
+        // Get token reference
         const storedToken = user.refreshTokens.find(t => t.token === token);
         if (!storedToken) {
             return res.status(401).json({
