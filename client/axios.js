@@ -7,7 +7,7 @@ import { setCredentials, clearCredentials } from "@/store/authSlice";
 
 // create an axios instance
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000",
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     withCredentials: true, // send cookies (refresh token) to server
 });
 
