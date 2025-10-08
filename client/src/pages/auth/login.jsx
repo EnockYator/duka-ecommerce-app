@@ -48,8 +48,8 @@ function AuthLogin() {
         try {
             
             // dispatch register action
-            const response = await dispatch(loginUser(formData)).unwrap();
-            console.log("Login successful:", response);
+            await dispatch(loginUser(formData)).unwrap();
+            // on success navigate to home
             navigate('/shop/home');
 
         } catch (err) {
