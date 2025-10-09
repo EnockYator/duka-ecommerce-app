@@ -11,7 +11,8 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/refresh", refreshRefreshToken); // uses cookie
 router.post("/logout", logoutUser);
-router.get("check-auth", checkAuth);
+router.get("/check-auth", checkAuth);
+ 
 
 
 module.exports = router;

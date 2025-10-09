@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 //routers
 const authRouter = require('./routes/auth-route');
+const protectedRouter = require('./routes/protected');
 
 // Connect to MongoDB
 connectDB(MONGODB_URL);
@@ -44,6 +45,7 @@ app.use(express.json());
 
 // use routes
 app.use("/api/auth/", authRouter);
+app.use("/api/protected/", protectedRouter);
 
 // Start the server
 app.listen(PORT, () => {
