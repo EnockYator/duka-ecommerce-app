@@ -4,7 +4,8 @@
 import { 
     refreshSession, clearCredentials, loginUser,
     logoutUser, registerUser, setAuthError, 
-    setCredentials, setUser, clearMessages
+    setCredentials, setUser, clearMessages,
+    checkAuth
 } from '@/store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
@@ -23,7 +24,7 @@ export function  AuthProvider({ children }) {
 
     const refreshTimer = useRef(null);
 
-    
+        
     // Restore session on app mount for consistency across tabs
     useEffect(() => {
         const restoreSession = async () => {
@@ -110,6 +111,12 @@ export function  AuthProvider({ children }) {
             window.removeEventListener('storage', handleStorageChange);
         };  
     }, [dispatch]);
+
+
+    // check auth satus
+    useEffect(() => {
+        dispatch(checkAuth());
+    }, [dispatch]);
     
     
     // show loading screen while refreshing
@@ -125,6 +132,7 @@ export function  AuthProvider({ children }) {
         registerUser: (formData) => dispatch(registerUser(formData)),
         logoutUser: () => dispatch(logoutUser()),
         refreshSession: () => dispatch(refreshSession()),
+        checkAuth: () => dispatch(checkAuth()),
         setUser: () => dispatch(setUser()),
         setCredentials: (data) => dispatch(setCredentials(data)),
         clearCredentials: () => dispatch(clearCredentials()),
