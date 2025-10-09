@@ -11,7 +11,7 @@ const generateAccessToken = (payload) => {
     });
 };  
 
-// Function to generate refresh token (keep the token minimal for security) ***********************
+// Function to generate refresh token (keep the token minimal for security) 
 const generateRefreshToken = ({ userID }) => {
     return jwt.sign({ userID }, REFRESH_TOKEN_SECRET, {
         expiresIn: '7d'
