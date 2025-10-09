@@ -81,6 +81,23 @@ export const refreshSession = createAsyncThunk(
   }
 );
 
+export const checkAuth = createAsyncThunk(
+    "auth/check-auth",
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const res = await axiosInstance.get(
+                `${import.meta.env.VITE_API_BASE_URL}/api/auth/check-auth`,
+                {headers: { Authorization: `Bearer ${token}` }},
+                { withCredentials: true } // allows cookies for refresh token
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || { message: "Failed to check auth" });
+        }
+    }
+);
+
 
 const authSlice = createSlice({
     name: 'auth',
@@ -198,7 +215,29 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload?.message || 
                     "Session refresh failed";
+            })
+            // checkAuth
+            .addCase(checkAuth.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(checkAuth.fulfilled, (state, action) => {
+                const { user, accessToken } = action.payload;
+                state.isLoading = false;
+                state.user = user || null;
+                state.accessToken = accessToken || null;
+                state.error = null;
+                state.isAuthenticated = !!user;
+            })
+            .addCase(checkAuth.rejected, (state, action) => {
+                state.isAuthenticated = false;
+                state.accessToken = null;
+                state.user = null;
+                state.isLoading = false;
+                state.error = action.payload?.message || 
+                    "Not authenticated";
             });
+
 
     },
 });
