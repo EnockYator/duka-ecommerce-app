@@ -134,7 +134,7 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
             path: "/",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -184,7 +184,7 @@ const refreshRefreshToken = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none", // for cross-site
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             });
              
@@ -202,7 +202,7 @@ const refreshRefreshToken = async (req, res) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none", // for cross-site
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             });
 
@@ -249,7 +249,7 @@ const refreshRefreshToken = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
             path: "/",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -346,7 +346,7 @@ const logoutUser = async (req, res) => {
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             path: "/",
             }
         );
@@ -384,7 +384,7 @@ const logoutAllDevices = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
         path: "/",
-        sameSite: "strict",
+        sameSite: "none", // for cross-site
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
