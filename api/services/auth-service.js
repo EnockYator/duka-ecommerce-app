@@ -273,6 +273,47 @@ const refreshRefreshToken = async (req, res) => {
 };
 
 
+// check-auth
+const checkAuth = async (res, req) => {
+    const authHeader = req.headers?.authorization;
+
+    try {
+        if (!authHeader) {
+            return res.status(200).json({
+                success: false,
+                message: "Not authenticated, no accessToken"
+            });
+        }
+
+        const accessToken = authHeader.split(" ")[1];
+
+        const { valid, expired, decoded } = verifyAccessToken(accessToken);
+
+        if (!valid) {
+            return res.status(200).json({
+                success: false,
+                message: expired ? "Access token expired" : "Invalid access token"
+            });
+        }
+
+        if (valid) {
+            const { user, accessToken } = decoded;
+            return res.status(200).json({
+                success: true,
+                user,
+                accessToken,
+                message: "Authorized"
+            });
+        }
+    } catch (error) {
+        return res.status(200).json({
+            success: false,
+            message: "Not authorized"
+        });
+    }
+};
+
+
 /********* logout service *********/
 const logoutUser = async (req, res) => {
     try {
@@ -366,5 +407,6 @@ module.exports = {
     loginUser,
     logoutUser,
     logoutAllDevices,
-    refreshRefreshToken
+    refreshRefreshToken,
+    checkAuth
 };
