@@ -104,7 +104,7 @@ const loginUser = async (req, res) => {
             email: existingUser.email,
         };
 
-        const accessToken = generateAccessToken({ payload });
+        const accessToken = generateAccessToken(payload);
         const refreshToken = generateRefreshToken({ userID: payload.id });
 
         // get device info (user-agent) & IP address
@@ -229,7 +229,7 @@ const refreshRefreshToken = async (req, res) => {
             email: user.email,
         };
         
-        const newAccessToken = generateAccessToken({ payload });
+        const newAccessToken = generateAccessToken(payload);
         const newRefreshToken = generateRefreshToken({ userID: payload.id });
         
         // rotate this device's token
