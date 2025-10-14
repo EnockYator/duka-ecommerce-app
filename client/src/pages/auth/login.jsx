@@ -1,13 +1,15 @@
 import CommonForm from "@/components/common/authForm";
 import { loginFormControls } from "@/config";
-import { loginUser } from "@/store/authSlice";
+import { useAuth } from "@/custom_hooks/useAuth";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+
 
 function AuthLogin() {
 
-    const dispatch = useDispatch();
+    const { actions } = useAuth();
+    const { loginUser } = actions;
+
     const navigate = useNavigate();
 
     const initialState = {
@@ -47,8 +49,8 @@ function AuthLogin() {
     async function onSubmit() {
         try {
             
-            // dispatch register action
-            await dispatch(loginUser(formData)).unwrap();
+            // dispatch login action
+            await loginUser(formData).unwrap();
             // on success navigate to home
             navigate('/shop/home');
 

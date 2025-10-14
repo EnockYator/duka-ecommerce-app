@@ -1,13 +1,14 @@
 import CommonForm from "@/components/common/authForm";
 import { registerFormControls } from "@/config";
-import { registerUser } from "@/store/authSlice";
+import { useAuth } from "@/custom_hooks/useAuth";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 function AuthRegister() {
 
-    const dispatch = useDispatch();
+    const { actions } = useAuth();
+    const { registerUser } = actions;
+
     const navigate = useNavigate();
 
     const initialState = {
@@ -58,7 +59,7 @@ function AuthRegister() {
         try {
             
             // dispatch register action
-            const response = await dispatch(registerUser(formData)).unwrap();
+            const response = await registerUser(formData).unwrap();
             console.log("Registration successful:", response);
             navigate('/auth/login');
 
