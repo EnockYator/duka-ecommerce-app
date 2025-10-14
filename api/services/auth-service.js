@@ -2,47 +2,20 @@
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./../../models/User')
-const { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } = require('../../services/tokenService');
+const User = require('../models/User')
+
+const { generateAccessToken,
+    generateRefreshToken,
+    verifyAccessToken,
+    verifyRefreshToken, 
+} = require('./token-service');
+
+// input validators
+const { validateRegisterInput } = require('../utils/auth-validators/registerValidator');
+const { validateLoginInput } = require('../utils/auth-validators/loginValidator');
 
 
-/********* register controller *********/
-// register validation helper
-function validateRegisterInput({ userName, email, password }) {
-    const errors = {};
-
-    // Username
-    if (!userName || userName.trim() === "") {
-        errors.userName = "Username is required";
-    } 
-    if (userName.length < 3) {
-        errors.userName = "Username must be at least 4 characters long";
-    }
-
-    // Email
-    if (!email || email.trim() === "") {
-        errors.email = "Email is required";
-    } 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        errors.email = "Email format is invalid";
-    }
-
-    // Password
-    if (!password || password.trim() === "") {
-        errors.password = "Password is required";
-    }
-    if (password.length < 8) {
-        errors.password = "Password must be at least 8 characters long";
-    }
-    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-    if (!strongPassword.test(password)) {
-    errors.password =
-        "Password must include at least one uppercase letter, one number, and one special character";
-    }
-
-  return errors;
-}
+/********* register service *********/
 
 const registerUser = async (req, res) => {
     const {userName, email, password} = req.body;
@@ -91,36 +64,7 @@ const registerUser = async (req, res) => {
 };
 
 
-/********* login controller *********/
-// login validation helper
-function validateLoginInput({ email, password }) {
-    const errors = {};
-
-    // Email
-    if (!email || email.trim() === "") {
-        errors.email = "Email is required";
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        errors.email = "Email format is invalid";
-    }
-
-    // Password
-    if (!password || password.trim() === "") {
-        errors.password = "Password is required";
-    } 
-    if (password.length < 8) {
-        errors.password = "Password must be at least 8 characters long";
-    }
-    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-    if (!strongPassword.test(password)) {
-    errors.password =
-        "Password must include at least one uppercase letter, one number, and one special character";
-    }
-    
-    return errors;
-};
-
+/********* login service *********/
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -158,10 +102,11 @@ const loginUser = async (req, res) => {
             id: existingUser._id.toString(),
             userName: existingUser.userName,
             email: existingUser.email,
+            role: existingUser.role,
         };
 
-        const accessToken = generateAccessToken({ payload });
-        const refreshToken = generateRefreshToken({ id: payload.id });
+        const accessToken = generateAccessToken(payload);
+        const refreshToken = generateRefreshToken({ userID: payload.id });
 
         // get device info (user-agent) & IP address
         const device = req.headers['user-agent'] || 'unknown device';
@@ -189,7 +134,7 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
             path: "/",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -216,38 +161,60 @@ const loginUser = async (req, res) => {
     }
 };
 
-/********* refreshToken controller *********/
-const refreshAccessToken = async (req, res) => {
+/********* refreshToken service *********/
+const refreshRefreshToken = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
         
+        // No token - guest mode (silently ignore)
         if (!token) {
-            return res.status(401).json({
+            return res.status(200).json({
                 success: false,
-                message: "No refresh token provided"
+                mode: "guest",
+                message: "No refresh token found, guest mode"
             });
         }
         
         // verify refresh token
         const { valid, expired, decoded } = verifyRefreshToken(token);
         
+        // if invalid or expired - clear cookie + guest mode (no 401)
         if (!valid) {
-            return res.status(401).json({
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+                path: "/",
+                sameSite: "none", // for cross-site
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+             
+            return res.status(200).json({
                 success: false,
-                message: expired ? "Refresh token expired" : "Invalid refresh token"
+                mode: "guest",
+                message: expired ? "Session expired, please login" : "Invalid refresh token"
             });
         }
        
         // find user and ensure token exists in DB
         const user = await User.findById(decoded.id);
         if (!user || !user.refreshTokens || !user.refreshTokens.some(t => t.token === token)) {
-            return res.status(401).json({
+            res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+                path: "/",
+                sameSite: "none", // for cross-site
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+
+
+            return res.status(200).json({
                 success: false,
-                message: "Refresh token not recognized"
+                mode: "guest",
+                message: "Refresh token not recognized, guest mode"
             });
         }
 
-        // find the device entry
+        // Get token reference
         const storedToken = user.refreshTokens.find(t => t.token === token);
         if (!storedToken) {
             return res.status(401).json({
@@ -261,10 +228,11 @@ const refreshAccessToken = async (req, res) => {
             id: user._id.toString(),
             userName: user.userName,
             email: user.email,
+            role: user.role,
         };
         
-        const newAccessToken = generateAccessToken({ payload });
-        const newRefreshToken = generateRefreshToken({ id: payload.id });
+        const newAccessToken = generateAccessToken(payload);
+        const newRefreshToken = generateRefreshToken({ userID: payload.id });
         
         // rotate this device's token
         storedToken.token = newRefreshToken;
@@ -281,7 +249,7 @@ const refreshAccessToken = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
             path: "/",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -301,12 +269,54 @@ const refreshAccessToken = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             success: false,
-            message: err.message || "Failed to process refresh token"
+            message: err.message || "Session refresh failed"
         });
     }
 };
 
-/********* logout controller *********/
+
+// check-auth
+const checkAuth = async (req, res) => {
+    const authHeader = req.headers?.authorization;
+
+    try {
+        if (!authHeader) {
+            return res.status(200).json({
+                success: false,
+                message: "Not authenticated, no accessToken"
+            });
+        }
+
+        const accessToken = authHeader.split(" ")[1];
+        const { valid, expired, decoded } = verifyAccessToken(accessToken);
+
+        if (!valid) {
+            return res.status(200).json({
+                success: false,
+                message: expired ? "Access token expired" : "Invalid access token"
+            });
+        }
+
+        const user = decoded;
+
+        return res.status(200).json({
+            success: true,
+            user,
+            message: "Authorized"
+        });
+
+    } catch (error) {
+        console.error("Auth check error:", error);
+        return res.status(200).json({
+            success: false,
+            message: "Not authorized"
+        });
+    }
+};
+
+
+
+/********* logout service *********/
 const logoutUser = async (req, res) => {
     try {
         const token = req.cookies?.refreshToken;
@@ -336,7 +346,7 @@ const logoutUser = async (req, res) => {
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "none", // for cross-site
             path: "/",
             }
         );
@@ -354,7 +364,7 @@ const logoutUser = async (req, res) => {
     }
 };
 
-/********* logout from all devices controller *********/
+/********* logout from all devices service *********/
 const logoutAllDevices = async (req, res) => {
   try {
     const userId = req.user.id; // from access token middleware
@@ -374,7 +384,7 @@ const logoutAllDevices = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
         path: "/",
-        sameSite: "strict",
+        sameSite: "none", // for cross-site
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -399,5 +409,6 @@ module.exports = {
     loginUser,
     logoutUser,
     logoutAllDevices,
-    refreshAccessToken
+    refreshRefreshToken,
+    checkAuth
 };

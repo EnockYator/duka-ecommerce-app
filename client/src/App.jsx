@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import AuthLayout from "./components/auth/AuthLayout"
 import AuthLogin from "./pages/auth/login"
 import AuthRegister from "./pages/auth/register"
+import RefreshPage from "./pages/auth/refresh"
 // admin
 import AdminLayout from "./components/admin-view/AdminLayout"
 import AdminDashBoard from "./pages/admin-view/dashboard"
@@ -25,14 +26,29 @@ import GuestHomePage from "./pages/guest-view/home"
 import GuestLayout from "./components/guest-view/GuestLayout"
 import About from "./pages/guest-view/about"
 
+// custom hooks
+import { useAuth } from "./custom_hooks/useAuth"
+
+//shadcn
+import { Toaster } from "sonner"
+import { AuthNotifier } from "./contexts/auth/authNotifier"
+
+
 
 function App() {
-
-  const isAuthenticated = false;
-  const user = null;
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <div className="flex min-h-screen w-screen flex-col overflow-hidden bg-white">
+
+      {/* sonner from shadcn*/}
+      <AuthNotifier />
+      <Toaster 
+        position="top-right" 
+        richColors // stronger color scheme
+        closeButton // enable close button
+      />
+
       { /* Common components */ }
 
       <Routes>
@@ -45,6 +61,8 @@ function App() {
           <Route index element={<Navigate to="login" replace />} /> {/* default to login */ /* SEO friendly by avoiding duplicates */}
           <Route path="login" element={<AuthLogin/>}></Route>
           <Route path="register" element={<AuthRegister/>}></Route>
+          <Route path="refresh" element={<RefreshPage/>}></Route>
+
         </Route>
         
         {/* admin routes */}

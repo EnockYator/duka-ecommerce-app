@@ -1,6 +1,6 @@
 import CommonForm from "@/components/common/authForm";
 import { loginFormControls } from "@/config";
-import { loginUser } from "@/store/auth-slice";
+import { loginUser } from "@/store/authSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -48,8 +48,8 @@ function AuthLogin() {
         try {
             
             // dispatch register action
-            const response = await dispatch(loginUser(formData)).unwrap();
-            console.log("Login successful:", response);
+            await dispatch(loginUser(formData)).unwrap();
+            // on success navigate to home
             navigate('/shop/home');
 
         } catch (err) {

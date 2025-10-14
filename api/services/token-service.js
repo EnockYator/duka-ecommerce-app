@@ -5,13 +5,13 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 // Function to generate access token
-const generateAccessToken = ({ payload }) => {
+const generateAccessToken = (payload) => {
     return jwt.sign(payload, ACCESS_TOKEN_SECRET, { 
         expiresIn: '15m' 
     });
 };  
 
-// Function to generate refresh token (keep the token minimal for security) ***********************
+// Function to generate refresh token (keep the token minimal for security) 
 const generateRefreshToken = ({ userID }) => {
     return jwt.sign({ userID }, REFRESH_TOKEN_SECRET, {
         expiresIn: '7d'
