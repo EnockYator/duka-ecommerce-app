@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import { AuthContext } from './authContext';
 import axiosInstance from './../../../axios';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // provider to wrap on app
 export function  AuthProvider({ children }) {
@@ -117,14 +118,6 @@ export function  AuthProvider({ children }) {
     useEffect(() => {
         dispatch(checkAuth());
     }, [dispatch]);
-    
-    
-    // show loading screen while refreshing
-    if (isLoading && !user) {
-        return (
-            <div className='w-screen h-screen bg-gray-50 px-4 py-4'>Loading session...</div>
-        );
-    }
 
     // define auth reusable auth actions
     const actions = {
@@ -140,9 +133,11 @@ export function  AuthProvider({ children }) {
         clearMessages: () => dispatch(clearMessages()),
     };
     
-    // prevent premature loading
+    //prevent premature loading
     if (authState.isAuthenticated && !authState.user) {
-        return <div>Loading...</div>
+        return (
+            <Skeleton className="w-full h-full bg-black" />
+        )
     }
 
     return (

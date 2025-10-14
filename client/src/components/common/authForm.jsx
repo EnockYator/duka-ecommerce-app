@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { useAuth } from "@/custom_hooks/useAuth";
 
 /**
  * RenderInputByComponentType
@@ -99,7 +100,7 @@ function CommonForm({
   validators = {},
   setErrors,
 }) {
-  const [loading, setLoading] = useState(false);
+  const { isLoading } = useAuth();
 
   // handle input change + live validation
   const handleChange = (fieldName, value) => {
@@ -127,7 +128,6 @@ function CommonForm({
   // submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     // Run all validations before submit
     const newErrors = {};
@@ -138,7 +138,6 @@ function CommonForm({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setLoading(false);
       return;
     }
 
@@ -148,9 +147,7 @@ function CommonForm({
       }
     } catch (err) {
       console.error("Form submit error:", err);
-    } finally {
-      setLoading(false);
-    }
+    }   
   };
 
 
@@ -181,8 +178,8 @@ function CommonForm({
         <p className="text-red-500 text-center text-sm">{errors.general}</p>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Processing..." : buttonText || "Submit"}
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Loading" : buttonText || "Submit"}
       </Button>
     </form>
   );
