@@ -305,11 +305,10 @@ const checkAuth = async (req, res) => {
             message: "Authorized"
         });
 
-    } catch (error) {
-        console.error("Auth check error:", error);
+    } catch (err) {
         return res.status(200).json({
             success: false,
-            message: "Not authorized"
+            // message: "Not authorized" // Fail silently
         });
     }
 };

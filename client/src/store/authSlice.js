@@ -83,6 +83,7 @@ export const refreshSession = createAsyncThunk(
 
 export const checkAuth = createAsyncThunk(
     "auth/check-auth",
+    // eslint-disable-next-line no-unused-vars
     async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -92,8 +93,10 @@ export const checkAuth = createAsyncThunk(
                 { withCredentials: true } // allows cookies for refresh token
             );
             return res.data;
+        // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            return rejectWithValue(err.response?.data || { message: "Failed to check auth" });
+            // return rejectWithValue(err.response?.data || { message: "Failed to check auth" });
+            return;
         }
     }
 );

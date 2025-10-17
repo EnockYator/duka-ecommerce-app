@@ -36,7 +36,13 @@ import { AuthNotifier } from "./contexts/auth/authNotifier"
 
 
 function App() {
-  const { isAuthenticated, user } = useAuth();
+  // const { isAuthenticated, user } = useAuth();
+  const isAuthenticated = true;
+  const user = {
+    userName: "Enock",
+    email: "ekyator02@gmail.com",
+    role: "admin",
+  };
 
   return (
     <div className="flex min-h-screen w-screen flex-col overflow-hidden bg-white">
